@@ -63,4 +63,4 @@ function processPayment(unitPrice, quantity, tier, percent) {
     }
 }
 
-processPayment(20000, 4, 'corporate', 15);
+processPayment(20000, 4, 'regular', 15);
