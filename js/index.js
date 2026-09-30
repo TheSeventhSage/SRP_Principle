@@ -10,62 +10,57 @@
  * 3. Handle errors and edge cases gracefully. 
  */
 
-// Discount Constants
-const regular = 0.05;
-const premium = 0.1;
-const vip = 0.2;
-
-function determineDiscount(customerTier, subTotal) {
-    return subTotal * customerTier
+function determineDiscount(tierPercent, subTotal) {
+    return subTotal * (tierPercent * 1 / 100)
 }
 
 function outputLog(subject, value) {
+    if (!(subject)) alert('Output subject missing/invalid');
+
     console.log(subject + ": " + value);
 }
 
-function paymentCalculation(subTotal, customerTier) {
-    let discountAmount = determineDiscount(subTotal * customerTier);
+function valueCheck(unitPrice, quantity, tier, percent) {
+    if (typeof unitPrice !== "number") {
+        alert('Invalid price value. Must be a valid number')
+        return false
+    } else if (typeof quantity !== "number") {
+        alert('Invalid quantity value. Must be a valid number')
+        return false
+    } else if (typeof percent !== "number") {
+        alert('Invalid percent value. Must be a valid number')
+        return false
+    } else if (typeof tier !== "string" || !tier) {
+        alert('Invalid or missing tier value. Must be a valid character set')
+    }
+
+    return true;
+}
+
+function paymentCalculation(subTotal, tierPercent) {
+    let discountAmount = determineDiscount(tierPercent, subTotal);
     let total = subTotal - discountAmount;
 
     return { discountAmount, total };
 }
 
-function payments(unitPrice, quantity) {
-    let subTotal = unitPrice * quantity;
+function processPayment(unitPrice, quantity, tier, percent) {
 
+    if (valueCheck(unitPrice, quantity, tier, percent) === false) return;
 
+    try {
+        let subTotal = unitPrice * quantity;
+
+        outputLog('Customer', tier)
+        outputLog('Subtotal', subTotal)
+
+        let result = paymentCalculation(subTotal, percent);
+
+        outputLog('Discount', result.discountAmount)
+        outputLog('Total', result.total)
+    } catch (error) {
+        alert('Unknown error occurred. Try again, and ensure that you input the right values.')
+    }
 }
 
-
-// function payments(unitPrice, quantity, customerTier) {
-//     let price = unitPrice * quantity;
-
-//     if (customerTier == "regular") {
-//         console.log("Customer: " + customerTier);
-//         console.log("Subtotal: " + x);
-//         let d = x * 0.05;
-//         let y = x - d;
-//         console.log("Discount: " + d);
-//         console.log("Total: " + y);
-//     }
-
-//     if (c == "premium") {
-//         console.log("Customer: " + customerTier);
-//         console.log("Subtotal: " + x);
-//         let d = x * 0.05;
-//         let y = x - d;
-//         console.log("Discount: " + d);
-//         console.log("Total: " + y);
-//     }
-//     if (c == "vip") {
-//         console.log("Customer: " + customerTier);
-//         console.log("Subtotal: " + x);
-//         let d = x * 0.05;
-//         let y = x - d;
-//         console.log("Discount: " + d);
-//         console.log("Total: " + y);
-//     }
-// }
-
-
-p(5, 10000, "premium");
+processPayment(20000, 4, 'corporate', 15);
